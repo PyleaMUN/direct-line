@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <title>PyleaMUN Direct</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles for the Inter font and overall aesthetics */
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(to right bottom, #a78bfa, #fbcfe8); /* Playful gradient background */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+            overflow-y: auto; /* Allow vertical scrolling */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        }
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #fbcfe8;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #a78bfa;
+            border-radius: 10px;
+            cursor: grab;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #8b5cf6;
+        }
+
+        /* Container styling */
+        .container {
+            background-color: #ffffff; /* White background for the form container */
+            border-radius: 1.5rem; /* Rounded-3xl */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); /* Softer shadow */
+            padding: 2rem; /* p-8 */
+            width: 100%;
+            max-width: 30rem; /* max-w-md */
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px; /* Space before any potential footer/navigation */
+        }
+
+        /* Logo styling */
+        .app-logo {
+            width: 80px; /* Small logo size */
+            height: 80px; /* Keep aspect ratio */
+            object-fit: contain; /* Ensure the image fits within the bounds */
+            border-radius: 12px; /* Slightly rounded corners for the logo */
+            margin-bottom: 1.5rem; /* Space below the logo */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for the logo */
+        }
+
+        /* Title styling */
+        h1 {
+            font-family: 'Fredoka One', cursive;
+            color: #6d28d9; /* Purple-700 */
+            font-size: 2.5rem; /* text-4xl */
+            margin-bottom: 1.5rem; /* mb-6 */
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        @media (max-width: 640px) { /* Tailwind's sm breakpoint */
+            h1 {
+                font-size: 2rem; /* text-3xl on small screens */
+            }
+        }
+
+        /* Descriptive text */
+        .text-description {
+            color: #4b5563; /* Gray-700 */
+            font-size: 0.875rem; /* text-sm */
+            margin-bottom: 2rem; /* mb-8 */
+            line-height: 1.5;
+        }
+
+        /* Form group styling */
+        .form-group {
+            margin-bottom: 1.25rem; /* mb-5 */
+            width: 100%;
+            text-align: left;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem; /* mb-2 */
+            font-weight: 600; /* font-semibold */
+            color: #374151; /* Gray-800 */
+            font-size: 0.875rem; /* text-sm */
+        }
+        input[type="text"], input[type="email"], select, textarea {
+            width: 100%;
+            padding: 0.75rem; /* py-2 px-3 */
+            border: 1px solid #d1d5db; /* Gray-300 */
+            border-radius: 0.75rem; /* rounded-xl */
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            background-color: #f9fafb; /* Gray-50 */
+            color: #1f2937; /* Gray-900 */
+        }
+        input[type="text"]:focus, input[type="email"]:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #8b5cf6; /* Purple-500 */
+            box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.5); /* Purple-400 with opacity */
+            background-color: #ffffff;
+        }
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* Radio button group */
+        .radio-group {
+            display: flex;
+            flex-wrap: wrap; /* Allow wrapping on small screens */
+            justify-content: center;
+            gap: 0.75rem; /* gap-3 */
+            margin-bottom: 1.5rem; /* mb-6 */
+        }
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 0.5rem 1rem; /* py-2 px-4 */
+            border-radius: 0.5rem; /* rounded-lg */
+            border: 1px solid #d1d5db; /* Gray-300 */
+            background-color: #f3f4f6; /* Gray-100 */
+            transition: all 0.2s ease;
+            font-weight: 500; /* font-medium */
+            color: #4b5563; /* Gray-700 */
+        }
+        .radio-group input[type="radio"] {
+            margin-right: 0.5rem; /* mr-2 */
+            accent-color: #8b5cf6; /* Purple-500 for checked state */
+            width: 1rem; /* w-4 */
+            height: 1rem; /* h-4 */
+        }
+        .radio-group input[type="radio"]:checked + span {
+            color: #6d28d9; /* Purple-700 */
+            font-weight: 600; /* font-semibold */
+        }
+        .radio-group input[type="radio"]:checked ~ label {
+            background-color: #e9d5ff; /* Purple-200 */
+            border-color: #a78bfa; /* Purple-400 */
+        }
+
+        /* Checkbox styling */
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-top: 1rem; /* mt-4 */
+            justify-content: center;
+        }
+        .checkbox-group input[type="checkbox"] {
+            margin-right: 0.5rem;
+            accent-color: #8b5cf6; /* Purple-500 */
+            width: 1.125rem; /* w-4.5 */
+            height: 1.125rem; /* h-4.5 */
+        }
+        .checkbox-group label {
+            font-weight: 500;
+            color: #4b5563;
+        }
+
+        /* Submit button */
+        button[type="submit"] {
+            width: 100%;
+            padding: 0.875rem 1.5rem; /* py-3 px-6 */
+            background-color: #8b5cf6; /* Purple-500 */
+            color: white;
+            border: none;
+            border-radius: 0.75rem; /* rounded-xl */
+            font-size: 1.125rem; /* text-lg */
+            font-weight: 700; /* font-bold */
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4); /* Purple-500 shadow */
+            margin-top: 1.5rem; /* mt-6 */
+        }
+        button[type="submit"]:hover {
+            background-color: #6d28d9; /* Purple-700 */
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(109, 40, 217, 0.5);
+        }
+        button[type="submit"]:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 10px rgba(139, 92, 246, 0.3);
+        }
+
+        /* Message box for success/error */
+        .message-box {
+            background-color: #e0f2f7; /* Light blue for messages */
+            color: #00796b; /* Dark teal text */
+            padding: 1rem;
+            border-radius: 0.75rem;
+            margin-top: 1.5rem;
+            font-weight: 500;
+            display: none; /* Hidden by default */
+            width: 100%;
+            text-align: center;
+            opacity: 0; /* Initial state for animation */
+            transform: translateY(10px); /* Initial state for animation */
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+        .message-box.success {
+            background-color: #d4edda; /* Green for success */
+            color: #155724;
+        }
+        .message-box.error {
+            background-color: #f8d7da; /* Red for error */
+            color: #721c24;
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            font-size: 1.5rem;
+            color: #6d28d9; /* Purple-700 */
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .loading-spinner {
+            border: 4px solid #f3f3f3; /* Light grey */
+            border-top: 4px solid #a78bfa; /* Purple-400 */
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Custom Alert/Message Box HTML (instead of alert()) */
+        .custom-alert-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        .custom-alert-box {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 90%;
+            min-width: 280px;
+            font-family: 'Inter', sans-serif;
+        }
+        .custom-alert-box h3 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #6d28d9; /* Purple-700 */
+            margin-bottom: 1rem;
+        }
+        .custom-alert-box p {
+            font-size: 1rem;
+            color: #4b5563; /* Gray-700 */
+            margin-bottom: 1.5rem;
+        }
+        .custom-alert-box button {
+            background-color: #a78bfa; /* Purple-400 */
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: background-color 0.2s ease-in-out;
+            cursor: pointer;
+        }
+        .custom-alert-box button:hover {
+            background-color: #8b5cf6; /* Purple-500 */
+        }
+    </style>
+</head>
+<body>
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="loading-spinner"></div>
+        <p>Processing...</p>
+    </div>
+
+    <div id="custom-alert-overlay" class="custom-alert-overlay hidden">
+        <div class="custom-alert-box">
+            <h3 id="custom-alert-title"></h3>
+            <p id="custom-alert-message"></p>
+            <button id="custom-alert-ok-button">OK</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <img src="logo.png" alt="PyleaMUN Logo" class="app-logo"
+             onerror="this.onerror=null; this.src='logo.png'; this.style.borderRadius='12px';">
+
+        <h1 class="font-extrabold">PyleaMUN Direct</h1>
+        <p class="text-description">
+            Submit your questions or feedback directly to the PyleaMUN staff.
+            Please choose your target audience below.
+        </p>
+
+        <form id="query-form" class="w-full">
+            <div class="form-group" id="name-group">
+                <label for="fullName">Full Name:</label>
+                <input type="text" id="fullName" placeholder="Your Name" class="shadow-sm">
+            </div>
+
+            <div class="form-group" id="committee-group">
+                <label for="committeeSelect">Your Committee:</label>
+                <select id="committeeSelect" class="shadow-sm">
+                    <option value="" disabled selected>Select your committee</option>
+                    <option value="UNEP">UNEP</option>
+                    <option value="Security Council">Security Council</option>
+                    <option value="ECOSOC">ECOSOC</option>
+                    <option value="NATO">NATO</option>
+                    <option value="WHO">WHO</option>
+                    <option value="Human Rights">Human Rights</option>
+                    <option value="UNESCO">UNESCO</option>
+                    <option value="UN WOMEN">UN WOMEN</option>
+                    <option value="Historical Crisis">Historical Crisis</option>
+                    <option value="GENERAL ASSEMBLY">GENERAL ASSEMBLY</option>
+                    <option value="Other">Other (e.g., Press Team, Admin Staff)</option>
+                </select>
+            </div>
+
+            <div class="form-group" id="email-group">
+                <label for="email">Your Email (for private replies):</label>
+                <input type="email" id="email" placeholder="you@example.com" class="shadow-sm">
+            </div>
+
+            <div class="form-group">
+                <label class="block text-sm font-semibold text-gray-800 mb-2">Send to:</label>
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" name="targetAudience" value="Chairs" checked>
+                        <span>My Committee Chairs</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="targetAudience" value="Secretariat">
+                        <span>Secretariat</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="targetAudience" value="President-Director">
+                        <span>President-Director</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="message">Your Question/Feedback:</label>
+                <textarea id="message" placeholder="Type your message here..." maxlength="500" class="shadow-sm"></textarea>
+                <p class="text-xs text-right text-gray-500"><span id="char-count">0</span>/500 characters</p>
+            </div>
+
+            <div class="checkbox-group">
+                <input type="checkbox" id="anonymousCheckbox">
+                <label for="anonymousCheckbox">Submit Anonymously (Private replies not possible)</label>
+            </div>
+
+            <button type="submit" id="submitQuery">Send Query</button>
+
+            <div id="messageBox" class="message-box"></div>
+        </form>
+    </div>
+
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Your web app's Firebase configuration (provided by user)
+        const firebaseConfig = {
+            apiKey: "AIzaSyC-He4LJ7KkpqCrZi0Fsc1MXl7Pmyq21sY",
+            authDomain: "pyleamun-direct-line.firebaseapp.com",
+            projectId: "pyleamun-direct-line",
+            storageBucket: "pyleamun-direct-line.firebasestorage.app",
+            messagingSenderId: "72053483515",
+            appId: "1:72053483515:web:788dab66a9288e642c8d5e"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Global variable to store the current user's UID (anonymous)
+        let currentUserId = null;
+
+        // Extract appId from the firebaseConfig for Firestore paths
+        // Using projectId as appId for consistency with Firestore rules
+        const appId = firebaseConfig.projectId; 
+
+        // --- UI Utility Functions ---
+        function showLoading(message = "Processing...") {
+            document.getElementById('loading-overlay').querySelector('p').textContent = message;
+            document.getElementById('loading-overlay').classList.remove('hidden');
+        }
+
+        function hideLoading() {
+            document.getElementById('loading-overlay').classList.add('hidden');
+        }
+
+        function showAlert(title, message, callback = null) {
+            document.getElementById('custom-alert-title').textContent = title;
+            document.getElementById('custom-alert-message').textContent = message;
+            document.getElementById('custom-alert-overlay').classList.remove('hidden');
+            const okButton = document.getElementById('custom-alert-ok-button');
+            okButton.onclick = () => {
+                document.getElementById('custom-alert-overlay').classList.add('hidden');
+                if (callback) callback();
+            };
+        }
+
+        /**
+         * Displays a message in the message box with a fade-out animation.
+         * @param {string} message - The message to display.
+         * @param {string} type - The type of message ('success' or 'error').
+         */
+        function showMessage(message, type) {
+            const messageBox = document.getElementById('messageBox');
+            messageBox.textContent = message;
+            messageBox.className = `message-box ${type}`; // Apply type class
+            messageBox.classList.remove('hidden'); // Ensure it's not hidden
+            
+            // Trigger reflow to restart animation
+            void messageBox.offsetWidth; 
+
+            messageBox.style.opacity = '1'; // Fade in
+            messageBox.style.transform = 'translateY(0)'; // Move up
+
+            setTimeout(() => {
+                messageBox.style.opacity = '0'; // Fade out
+                messageBox.style.transform = 'translateY(10px)'; // Move down
+                setTimeout(() => {
+                    messageBox.classList.add('hidden'); // Hide completely after transition
+                }, 500); // Match CSS transition duration
+            }, 3000); // Message visible for 3 seconds
+        }
+
+        // --- Firebase Authentication ---
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUserId = user.uid;
+                console.log("User signed in (anonymous):", currentUserId);
+            } else {
+                console.log("No user signed in. Signing in anonymously...");
+                signInAnonymously(auth)
+                    .then(() => {
+                        currentUserId = auth.currentUser?.uid || crypto.randomUUID();
+                        console.log("Anonymous sign-in successful. User ID:", currentUserId);
+                    })
+                    .catch((error) => {
+                        console.error("Anonymous sign-in failed:", error);
+                        showAlert("Authentication Error", "Could not sign you in. Please ensure Anonymous Authentication is enabled in your Firebase project settings.");
+                    });
+            }
+        });
+
+        // --- Form Elements and Logic ---
+        const queryForm = document.getElementById('query-form');
+        const fullNameInput = document.getElementById('fullName');
+        const committeeSelect = document.getElementById('committeeSelect');
+        const emailInput = document.getElementById('email');
+        const targetAudienceRadios = document.querySelectorAll('input[name="targetAudience"]');
+        const messageTextarea = document.getElementById('message');
+        const anonymousCheckbox = document.getElementById('anonymousCheckbox');
+        const charCountSpan = document.getElementById('char-count');
+
+        // Character counter for the message textarea
+        messageTextarea.addEventListener('input', () => {
+            charCountSpan.textContent = messageTextarea.value.length;
+        });
+
+        // Toggle required/disabled state based on anonymous checkbox
+        anonymousCheckbox.addEventListener('change', () => {
+            const isAnonymous = anonymousCheckbox.checked;
+            fullNameInput.disabled = isAnonymous;
+            committeeSelect.disabled = isAnonymous;
+            emailInput.disabled = isAnonymous;
+
+            fullNameInput.required = !isAnonymous;
+            committeeSelect.required = !isAnonymous;
+            emailInput.required = !isAnonymous;
+
+            // Clear values if becoming anonymous
+            if (isAnonymous) {
+                fullNameInput.value = '';
+                committeeSelect.value = '';
+                emailInput.value = '';
+            }
+        });
+
+        // Handle form submission
+        queryForm.addEventListener('submit', async (event) => {
+            event.preventDefault(); // Prevent default form submission
+
+            if (!currentUserId) {
+                showAlert("Error", "Authentication not ready. Please wait a moment and try again.");
+                return;
+            }
+
+            const message = messageTextarea.value.trim();
+            const isAnonymous = anonymousCheckbox.checked;
+            const targetAudience = document.querySelector('input[name="targetAudience"]:checked').value;
+
+            let senderName = isAnonymous ? 'Anonymous' : fullNameInput.value.trim();
+            let senderCommittee = isAnonymous ? 'N/A' : committeeSelect.value;
+            let senderEmail = isAnonymous ? 'N/A' : emailInput.value.trim();
+
+            // Basic validation
+            if (!message) {
+                showAlert("Validation Error", "Please enter your question or feedback message.");
+                return;
+            }
+            if (!isAnonymous && !senderName) {
+                showAlert("Validation Error", "Please enter your full name, or select 'Submit Anonymously'.");
+                return;
+            }
+            if (!isAnonymous && !senderCommittee) {
+                showAlert("Validation Error", "Please select your committee, or select 'Submit Anonymously'.");
+                return;
+            }
+            if (!isAnonymous && !senderEmail) {
+                showAlert("Validation Error", "Please enter your email for private replies, or select 'Submit Anonymously'.");
+                return;
+            }
+            // Simple email format validation
+            if (!isAnonymous && senderEmail !== 'N/A' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(senderEmail)) {
+                showAlert("Validation Error", "Please enter a valid email address.");
+                return;
+            }
+
+            showLoading("Sending your query...");
+
+            try {
+                // The collection path will be: artifacts/pyleamun-direct-line/public/data/queries
+                const queriesCollectionRef = collection(db, `artifacts/${appId}/public/data/queries`);
+
+                await addDoc(queriesCollectionRef, {
+                    message: message,
+                    senderName: senderName,
+                    senderCommittee: senderCommittee,
+                    senderEmail: senderEmail,
+                    target: targetAudience, // 'Chairs', 'Secretariat', 'President-Director'
+                    committeeSpecific: (targetAudience === 'Chairs' && !isAnonymous) ? senderCommittee : 'N/A', // Only relevant if target is Chairs
+                    isAnonymous: isAnonymous,
+                    status: 'New', // Initial status
+                    timestamp: new Date(),
+                    submitterUid: currentUserId, // Firebase anonymous UID for internal tracking
+                    answer: '', // Placeholder for answer
+                    answeredBy: '', // Placeholder for who answered
+                    answerTimestamp: null, // Placeholder for answer timestamp
+                    isVisibleToPublic: false // For potential public FAQ
+                });
+
+                hideLoading();
+                showMessage("Your query has been sent successfully!", 'success');
+                queryForm.reset(); // Clear the form
+                charCountSpan.textContent = '0'; // Reset character count
+                anonymousCheckbox.checked = false; // Reset anonymous checkbox
+                fullNameInput.disabled = false; // Re-enable fields
+                committeeSelect.disabled = false;
+                emailInput.disabled = false;
+
+            } catch (error) {
+                console.error("Error submitting query:", error);
+                hideLoading();
+                showAlert("Submission Failed", "There was an error sending your query. Please try again.");
+            }
+        });
+
+        // Initial setup when the DOM is fully loaded.
+        document.addEventListener('DOMContentLoaded', () => {
+            // Ensure initial state of fields based on anonymous checkbox (unchecked by default)
+            anonymousCheckbox.checked = false;
+            fullNameInput.disabled = false;
+            committeeSelect.disabled = false;
+            emailInput.disabled = false;
+        });
+    </script>
+</body>
+</html>
